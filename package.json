@@ -1,5 +1,5 @@
 {
-  "name": "deployjs-grunt-build",
+  "name": "@deployjs/grunt-build",
   "version": "0.0.1",
   "description": "Build Grunt-based projects ready for deployment",
   "main": "index.js",
@@ -13,6 +13,10 @@
     "ember-cli-deploy-plugin": "^0.2.1",
     "glob": "^7.1.1",
     "rsvp": "^3.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deployjs/deployjs-grunt-build.git"
   },
   "author": "",
   "license": "MIT"
