@@ -8,7 +8,7 @@ var path = require('path');
 const exec = require('child_process').exec;
 
 module.exports = {
-  name: 'deployjs-react-build',
+  name: 'deployjs-grunt-build',
 
   createDeployPlugin: function(options) {
     var DeployPlugin = DeployPluginBase.extend({
