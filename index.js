@@ -5,7 +5,7 @@ var RSVP = require('rsvp');
 var glob  = require('glob');
 var DeployPluginBase = require('ember-cli-deploy-plugin');
 var path = require('path');
-const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 
 module.exports = {
   name: 'deployjs-grunt-build',
@@ -24,18 +24,31 @@ module.exports = {
         this.log('building app to ' + outputPath + '...', { verbose: true });
 
         return new RSVP.Promise(function(resolve, reject) {
-          exec('grunt build',
-            {maxBuffer: 1024 * 1024 * 32},
-            function(err, stdout, stderr)
-          {
-            if(err) {
-              this.log(err, { color: 'red' });
-              reject(err);
-              return;
-            }
+          var build = spawn('grunt', ['build'], {
+            cwd: undefined,
+            env: process.env,
+            shell: true
+          });
 
-            resolve(outputPath);
+          build.stdout.on('data', function(data) {
+            this.log(data, { verbose: true });
           }.bind(this));
+
+          build.stderr.on('data', function(data) {
+            this.log(data, { color: 'red' });
+          }.bind(this));
+
+          build.on('close', function(code) {
+            if(code !== 0) {
+              reject('build failed');
+            } else {
+              resolve(outputPath);
+            }
+          });
+
+          build.on('error', function(data) {
+            reject(data);
+          });
         }.bind(this))
         .then(this._logSuccess.bind(this, outputPath))
         .then(function(files) {
